@@ -2,15 +2,10 @@ import React from 'react';
 import { 
   X, 
   CheckCircle2, 
-  AlertCircle, 
   RotateCcw, 
-  Terminal, 
   ShieldCheck, 
   Sparkles, 
-  Play, 
   Lock,
-  ExternalLink,
-  Layers,
   FileCode
 } from 'lucide-react';
 import { ActionNode } from '../types/setu';

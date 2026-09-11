@@ -3,6 +3,7 @@ import { GoogleCloudConnector } from './googleCloudConnector';
 import { GoogleWorkspaceConnector } from './googleWorkspaceConnector';
 import { DatabaseConnector } from './databaseConnector';
 import { WebhookConnector } from './webhookConnector';
+import { EmergencyResponseConnector } from './emergencyResponseConnector';
 import { ActionNode } from '../../types/setu';
 
 export class ConnectorRegistry {
@@ -12,6 +13,7 @@ export class ConnectorRegistry {
 
   private constructor() {
     this.connectors = [
+      new EmergencyResponseConnector(),
       new GoogleCloudConnector(),
       new GoogleWorkspaceConnector(),
       new DatabaseConnector(),

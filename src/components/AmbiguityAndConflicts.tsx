@@ -4,8 +4,6 @@ import {
   AlertOctagon, 
   Check, 
   CheckCircle2, 
-  ShieldAlert, 
-  ArrowRight,
   UserCheck
 } from 'lucide-react';
 import { AmbiguityAlert, ConflictItem } from '../types/setu';

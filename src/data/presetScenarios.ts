@@ -2,6 +2,28 @@ import { PresetScenario } from '../types/setu';
 
 export const PRESET_SCENARIOS: PresetScenario[] = [
   {
+    id: 'scenario-flood-emergency',
+    category: 'EMERGENCY_RESPONSE',
+    title: 'Flood & Disaster Emergency Response: Safe Evacuation Routing & Medical Triage',
+    description: 'Rapid inundation near residential sector. Safely route first responders avoiding flooded access roads, prioritize stranded oxygen-dependent civilians, verify bridge structural safety, and prepare emergency shelter dispatch.',
+    prompt: 'Heavy flooding has stranded people near a residential area. Find the safest way to get assistance to them and avoid flooded roads.',
+    sourceType: 'preset',
+    sampleDocumentName: 'disaster-telemetry-flood-sector7.json',
+    sampleDocumentContent: `{
+  "incident_id": "DISASTER-FL-702",
+  "disaster_type": "Flash Flood & River Basin Breach",
+  "location": "Riverside Terrace, Sector 7 Residential Zone",
+  "severity": "LEVEL_1_CRITICAL",
+  "stranded_residents": 14,
+  "vulnerable_cases": "3 elderly with home medical oxygen dependency",
+  "water_depth": "1.4m rising at 12cm/hr",
+  "blocked_access": "Route 4 (South Valley Expressway) confirmed flooded and impassable",
+  "viable_access": "Route 9 (North Ridge Causeway) passable for high-clearance emergency vehicles",
+  "hazards": ["Submerged electrical lines at Sector 7 transformer", "Swift current 3.2 m/s"]
+}`,
+    highlight: 'Societal Benefit Life-Safety Gate: Blocks routes through confirmed flooded roads, enforces oxygen-priority triage invariant, and requires Incident Commander sign-off.'
+  },
+  {
     id: 'scenario-incident-rollback',
     category: 'INFRASTRUCTURE',
     title: 'GCP Production Incident: Cloud Run Rollback & DB Health Gate',

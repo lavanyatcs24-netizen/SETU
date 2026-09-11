@@ -58,7 +58,7 @@ export function App() {
       try {
         const res = await fetch('/api/health');
         if (res.ok) setBackendOnline(true);
-      } catch (err) {
+      } catch {
         setBackendOnline(false);
       }
     };
@@ -124,16 +124,18 @@ export function App() {
   // Initial load: synthesize the default scenario
   useEffect(() => {
     if (activeScenario && !reasoningResult) {
-      handleAnalyzeIntent({
-        source: activeScenario.sourceType,
-        rawText: activeScenario.prompt,
-        documentFile: activeScenario.sampleDocumentName ? {
-          name: activeScenario.sampleDocumentName,
-          size: activeScenario.sampleDocumentContent?.length || 1024,
-          mimeType: 'application/json',
-          extractedText: activeScenario.sampleDocumentContent
-        } : undefined,
-        contextTags: [activeScenario.category]
+      queueMicrotask(() => {
+        handleAnalyzeIntent({
+          source: activeScenario.sourceType,
+          rawText: activeScenario.prompt,
+          documentFile: activeScenario.sampleDocumentName ? {
+            name: activeScenario.sampleDocumentName,
+            size: activeScenario.sampleDocumentContent?.length || 1024,
+            mimeType: 'application/json',
+            extractedText: activeScenario.sampleDocumentContent
+          } : undefined,
+          contextTags: [activeScenario.category]
+        });
       });
     }
   }, [activeScenario, handleAnalyzeIntent, reasoningResult]);
@@ -166,14 +168,67 @@ export function App() {
         }
         return a;
       });
-      return { ...prev, ambiguities: updated };
+
+      // Dynamic Action Graph Rebalancing based on chosen operational path
+      let updatedNodes = [...prev.actionGraph.nodes];
+      if (ambiguityId === 'amb-route-selection') {
+        if (optionId === 'opt-route12') {
+          // Rebalance toward South Marina Boat Route 12
+          updatedNodes = updatedNodes.map(node => {
+            if (node.id === 'node-verify-route') {
+              return {
+                ...node,
+                title: 'Verify Route 12 Marina Water Corridor & Enforce Route 4 Lock',
+                description: 'Enforce Flooded Road Invariant: Lock Route 4 (1.4m submerged) and clear South Marina watercraft departure corridor (29 min staging).',
+                parameters: { lockedRoute: 'Route 4', approvedRoute: 'Route 12 (South Marina Boat Corridor)', watercraftReady: true }
+              };
+            }
+            if (node.id === 'node-allocate-resources') {
+              return {
+                ...node,
+                title: 'Stage Marine Rescue Boats & Paramedic Swift-Water Team',
+                description: 'Deploy 2 Swift-Water Rescue Boats at South Marina staging dock equipped with portable battery oxygen units.',
+                parameters: { units: 2, unitType: 'SWIFT_WATER_RESCUE_BOAT', stagingArea: 'South Marina Slip 4' }
+              };
+            }
+            return node;
+          });
+        } else if (optionId === 'opt-route9') {
+          // Rebalance toward North Ridge Causeway Route 9
+          updatedNodes = updatedNodes.map(node => {
+            if (node.id === 'node-verify-route') {
+              return {
+                ...node,
+                title: 'Verify Route 9 Accessibility & Enforce Route 4 Lock',
+                description: 'Enforce Flooded Road Invariant: Lock Route 4 (1.4m submerged) from dispatch router and certify Route 9 North Ridge Causeway (+2.1m clearance).',
+                parameters: { lockedRoute: 'Route 4', approvedRoute: 'Route 9', clearanceMarginMeters: 2.1 }
+              };
+            }
+            if (node.id === 'node-allocate-resources') {
+              return {
+                ...node,
+                title: 'Stage High-Clearance Rescue Vehicles & Paramedic Crew',
+                description: 'Mobilize 2 High-Clearance 4x4 Emergency Vehicles equipped with portable oxygen concentrators and swift-water certified crew to Staging Area B.',
+                parameters: { units: 2, unitType: 'HIGH_CLEARANCE_4X4_AMBULANCE', onboardOxygenUnits: 3, stagingArea: 'North Ridge Staging B' }
+              };
+            }
+            return node;
+          });
+        }
+      }
+
+      return { 
+        ...prev, 
+        ambiguities: updated,
+        actionGraph: { ...prev.actionGraph, nodes: updatedNodes }
+      };
     });
 
     auditService.recordEvent({
       actorId: 'usr-operator',
       actorName: 'Operator',
       eventType: 'REASONING_COMPLETED',
-      details: `Resolved ambiguity ${ambiguityId} -> Selected option [${optionId}]. Updated execution graph.`,
+      details: `Resolved ambiguity ${ambiguityId} -> Selected option [${optionId}]. Dynamically rebalanced Action DAG.`,
     });
   };
 
@@ -403,15 +458,15 @@ export function App() {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-white bg-grid-pattern">
       
       {/* Top Demo / Simulation Mode Global Indicator */}
-      <div className="bg-amber-950/40 border-b border-amber-500/30 px-4 py-2 text-xs text-amber-200/90 font-mono flex flex-wrap items-center justify-between gap-2 shadow-sm z-50">
+      <div className="bg-rose-950/40 border-b border-rose-500/30 px-4 py-2 text-xs text-rose-200/90 font-mono flex flex-wrap items-center justify-between gap-2 shadow-sm z-50">
         <div className="flex items-center gap-2 max-w-5xl">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0" />
+          <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping shrink-0" />
           <span>
-            <strong className="text-amber-300 uppercase">Demo Sandbox Mode Active:</strong> All actions are verified against invariants and simulated locally. No real GCP deployments, database snapshots, or IAM tokens are claimed or altered without live credentials (Rule #7 Enforced).
+            <strong className="text-rose-300 uppercase">Demo Sandbox Mode Active:</strong> All actions are verified against life-safety invariants and simulated locally with zero real-world blast radius. No real emergency services or municipal dispatch networks are contacted without authorized credentials (Rule #7 Enforced).
           </span>
         </div>
         <div className="flex items-center gap-2 shrink-0 text-[10px]">
-          <span className="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 border border-amber-600/50 font-bold">
+          <span className="px-2 py-0.5 rounded bg-rose-900/60 text-rose-300 border border-rose-600/50 font-bold">
             VERIFIED DRY-RUN
           </span>
           <span className="text-slate-400">Zero Blast Radius</span>

@@ -1,14 +1,13 @@
 import React from 'react';
 import { 
   ShieldAlert, 
-  Activity, 
   Users, 
   Server, 
-  AlertTriangle, 
   CheckCircle2, 
   Layers, 
   Lock,
-  Gauge
+  Gauge,
+  LifeBuoy
 } from 'lucide-react';
 import { SituationModel } from '../types/setu';
 
@@ -98,6 +97,35 @@ export const SituationPanel: React.FC<SituationPanelProps> = ({
           <div>{getBlastRadiusBadge(situation.blastRadius)}</div>
         </div>
       </div>
+
+      {/* Emergency Telemetry & Life Safety Ribbon if active */}
+      {situation.environmentalState?.disasterType && (
+        <div className="p-3 rounded-xl bg-gradient-to-r from-rose-950/60 via-slate-950 to-amber-950/40 border border-rose-500/40 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div className="flex items-center gap-2">
+            <LifeBuoy className="w-4 h-4 text-rose-400 animate-spin" style={{ animationDuration: '6s' }} />
+            <span className="font-bold text-rose-300 tracking-wide uppercase">
+              {situation.environmentalState.disasterType}
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 text-[11px]">
+            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-200">
+              👥 Stranded: <strong className="text-white">{situation.environmentalState.strandedResidents || 14} Residents</strong>
+            </span>
+            <span className="px-2 py-0.5 rounded bg-rose-900/60 border border-rose-700/60 text-rose-200 font-bold">
+              🫁 Medical Priority: {situation.environmentalState.oxygenDependentCases || 3} Oxygen-Dependent
+            </span>
+            <span className="px-2 py-0.5 rounded bg-amber-900/50 border border-amber-700/50 text-amber-200">
+              🌊 Water: {situation.environmentalState.waterDepth || '1.4m'} (Rising {situation.environmentalState.rateOfRise || '12cm/hr'})
+            </span>
+            <span className="px-2 py-0.5 rounded bg-rose-950 border border-rose-800 text-rose-400 font-semibold">
+              ⛔ Route 4: Blocked
+            </span>
+            <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-300 font-semibold">
+              ✓ Route 9: Verified Safe
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Grid: Target Systems, Actors, and Invariants */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">

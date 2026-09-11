@@ -8,7 +8,6 @@ import {
   Link as LinkIcon, 
   Clock, 
   CheckCircle2, 
-  Layers, 
   RefreshCw,
   Hash
 } from 'lucide-react';
@@ -182,7 +181,7 @@ export const AuditTrailViewer: React.FC<AuditTrailViewerProps> = ({
 
         {/* Audit Log Entries List */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-3 flex-1 font-mono text-xs">
-          {filteredEntries.map((entry, idx) => (
+          {filteredEntries.map((entry) => (
             <div 
               key={entry.id}
               className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 hover:border-slate-700 transition-all space-y-2 relative"

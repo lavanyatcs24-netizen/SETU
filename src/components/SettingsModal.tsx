@@ -5,11 +5,7 @@ import {
   Cloud, 
   Mail, 
   Check, 
-  Shield, 
-  AlertTriangle, 
-  Radio, 
-  Info,
-  Server
+  Info
 } from 'lucide-react';
 import { connectorRegistry } from '../services/connectors/connectorRegistry';
 

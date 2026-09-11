@@ -7,10 +7,8 @@ import {
   Sparkles, 
   ArrowRight, 
   X, 
-  Volume2, 
   Paperclip,
-  CheckCircle2,
-  AlertCircle
+  CheckCircle2
 } from 'lucide-react';
 import { MultimodalPayload, IntentSource } from '../types/setu';
 
@@ -56,17 +54,19 @@ export const MultimodalInput: React.FC<MultimodalInputProps> = ({
 
   // Sync initial prompt updates from presets
   useEffect(() => {
-    if (initialPrompt) {
-      setRawText(initialPrompt);
-    }
-    if (initialDocumentName) {
-      setDocumentFile({
-        name: initialDocumentName,
-        size: initialDocumentContent?.length || 1024,
-        mimeType: 'application/json',
-        extractedText: initialDocumentContent
-      });
-    }
+    queueMicrotask(() => {
+      if (initialPrompt) {
+        setRawText(initialPrompt);
+      }
+      if (initialDocumentName) {
+        setDocumentFile({
+          name: initialDocumentName,
+          size: initialDocumentContent?.length || 1024,
+          mimeType: 'application/json',
+          extractedText: initialDocumentContent
+        });
+      }
+    });
   }, [initialPrompt, initialDocumentName, initialDocumentContent]);
 
   // Voice recording & visualizer
@@ -118,7 +118,7 @@ export const MultimodalInput: React.FC<MultimodalInputProps> = ({
 
       // Draw audio frequency visualizer on canvas
       drawVisualizer();
-    } catch (err) {
+    } catch {
       console.warn('Microphone access denied or unavailable. Simulating audio input.');
       setIsRecording(true);
       setAudioDuration(0);
@@ -379,7 +379,7 @@ export const MultimodalInput: React.FC<MultimodalInputProps> = ({
           onChange={(e) => setRawText(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={3}
-          placeholder="State your high-level intent (e.g. 'Roll back GCP Cloud Run auth-gateway-prod after error spike, check database replica lag, and alert team')..."
+          placeholder="State your operational or emergency intent (e.g. 'Heavy flooding has stranded 14 residents near Sector 7. Find safest assistance route avoiding flooded roads, prioritize 3 oxygen-dependent civilians, and stage rescue convoys')..."
           className="w-full bg-slate-950/90 border border-slate-800 rounded-xl p-3.5 pr-28 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/80 focus:ring-1 focus:ring-cyan-500/50 resize-none transition-all"
         />
 

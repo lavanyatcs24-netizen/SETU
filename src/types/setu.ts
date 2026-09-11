@@ -31,7 +31,7 @@ export interface Actor {
 export interface SystemEntity {
   id: string;
   name: string;
-  type: 'service' | 'database' | 'queue' | 'calendar' | 'email' | 'budget' | 'iam_role';
+  type: 'service' | 'database' | 'queue' | 'calendar' | 'email' | 'budget' | 'iam_role' | 'emergency_dispatch' | 'shelter_mgmt' | 'medical_triage' | 'evacuation_corridor';
   status: 'healthy' | 'degraded' | 'locked' | 'unreachable';
   environment: 'production' | 'staging' | 'sandbox';
   currentVersion?: string;
@@ -104,7 +104,11 @@ export type ActionType =
   | 'DATABASE_MIGRATION'
   | 'IAM_CREDENTIAL_REVOKE'
   | 'FINANCIAL_PO_APPROVE'
-  | 'WEBHOOK_DISPATCH';
+  | 'WEBHOOK_DISPATCH'
+  | 'EMERGENCY_DISPATCH_ALERT'
+  | 'ROUTE_ACCESSIBILITY_VERIFY'
+  | 'RESOURCE_ALLOCATION'
+  | 'CIVIL_SAFETY_BROADCAST';
 
 export type ActionStatus = 
   | 'PENDING'
@@ -194,7 +198,7 @@ export interface GeminiReasoningOutput {
 
 export interface PresetScenario {
   id: string;
-  category: 'INFRASTRUCTURE' | 'FINANCE' | 'WORKPLACE' | 'SECURITY';
+  category: 'EMERGENCY_RESPONSE' | 'INFRASTRUCTURE' | 'FINANCE' | 'WORKPLACE' | 'SECURITY';
   title: string;
   description: string;
   prompt: string;

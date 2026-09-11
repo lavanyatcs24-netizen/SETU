@@ -2,18 +2,13 @@ import React from 'react';
 import { 
   GitCommit, 
   Play, 
-  RotateCcw, 
   CheckCircle2, 
-  Clock, 
   AlertCircle, 
-  ShieldAlert, 
-  ArrowRight, 
-  Layers,
-  Sparkles,
-  Zap,
-  Lock,
-  ChevronRight,
-  Eye
+  Sparkles, 
+  Zap, 
+  Lock, 
+  ChevronRight, 
+  Eye 
 } from 'lucide-react';
 import { ActionGraph, ActionNode } from '../types/setu';
 

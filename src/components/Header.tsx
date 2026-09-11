@@ -4,9 +4,8 @@ import {
   Cpu, 
   Settings, 
   Radio, 
-  FileCheck2, 
   Sparkles,
-  ExternalLink
+  HeartPulse
 } from 'lucide-react';
 import { PresetScenario } from '../types/setu';
 import { PRESET_SCENARIOS } from '../data/presetScenarios';
@@ -57,12 +56,12 @@ export const Header: React.FC<HeaderProps> = ({
                     v1.0
                   </span>
                 </h1>
-                <span className="hidden sm:inline-block text-xs font-mono px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/50">
-                  TechVerse
+                <span className="hidden sm:inline-block text-xs font-mono px-2 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-700/50">
+                  PromptWars × TechVerse
                 </span>
               </div>
               <p className="text-xs text-slate-400 tracking-wide font-medium">
-                Human Intent <span className="text-cyan-400">→</span> Verified Action
+                Universal Bridge: Human Intent <span className="text-cyan-400">→</span> Verified Safety Actions
               </p>
             </div>
           </div>
@@ -85,23 +84,37 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
           {PRESET_SCENARIOS.map((sc) => {
             const isActive = activeScenarioId === sc.id;
+            const isEmergency = sc.category === 'EMERGENCY_RESPONSE';
             return (
               <button
                 key={sc.id}
                 onClick={() => onSelectPreset(sc)}
                 className={`text-xs px-2.5 py-1 rounded-md font-medium whitespace-nowrap transition-all flex items-center gap-1.5 border ${
                   isActive
-                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20'
-                    : 'bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200'
+                    ? isEmergency 
+                      ? 'bg-rose-500/20 text-rose-200 border-rose-500/60 shadow-sm shadow-rose-500/30 ring-1 ring-rose-500/40'
+                      : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20'
+                    : isEmergency
+                      ? 'bg-slate-900/90 text-rose-300/90 border-rose-900/50 hover:border-rose-700 hover:text-rose-200'
+                      : 'bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200'
                 }`}
                 title={sc.description}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${
-                  sc.category === 'INFRASTRUCTURE' ? 'bg-amber-400' :
-                  sc.category === 'FINANCE' ? 'bg-emerald-400' :
-                  sc.category === 'WORKPLACE' ? 'bg-blue-400' : 'bg-rose-400'
-                }`} />
+                {isEmergency ? (
+                  <HeartPulse className="w-3 h-3 text-rose-400 animate-pulse" />
+                ) : (
+                  <span className={`w-1.5 h-1.5 rounded-full ${
+                    sc.category === 'INFRASTRUCTURE' ? 'bg-amber-400' :
+                    sc.category === 'FINANCE' ? 'bg-emerald-400' :
+                    sc.category === 'WORKPLACE' ? 'bg-blue-400' : 'bg-purple-400'
+                  }`} />
+                )}
                 {sc.title.split(':')[0]}
+                {isEmergency && (
+                  <span className="text-[9px] font-mono px-1 py-0.2 bg-rose-900/60 text-rose-300 rounded uppercase">
+                    Primary
+                  </span>
+                )}
               </button>
             );
           })}
